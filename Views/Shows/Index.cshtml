@@ -1,0 +1,42 @@
+@model IEnumerable<TicketSystem.Models.Show>
+
+@{
+    ViewData["Title"] = "Available Shows";
+}
+
+<div class="container">
+    <h1 class="mb-4">Available Shows</h1>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <h4>No shows available</h4>
+            <p>There are no upcoming shows at this time. Please check back later!</p>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var show in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">@show.Title</h5>
+                            <p class="card-text">@show.Description</p>
+                            <p class="card-text">
+                                <strong>Date:</strong> @show.DateTime.ToString("MMMM dd, yyyy 'at' h:mm tt")<br>
+                                <strong>Venue:</strong> @show.Venue<br>
+                                <strong>Price:</strong> $@show.Price<br>
+                                <strong>Available Tickets:</strong> @show.AvailableTickets / @show.TotalTickets
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            <a asp-action="Details" asp-route-id="@show.Id" class="btn btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

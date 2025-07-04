@@ -1,0 +1,56 @@
+@model IEnumerable<TicketSystem.Models.Ticket>
+
+@{
+    ViewData["Title"] = "My Tickets";
+}
+
+<div class="container">
+    <h1 class="mb-4">My Tickets</h1>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <h4>No tickets purchased</h4>
+            <p>You haven't purchased any tickets yet.</p>
+            <a asp-action="Index" class="btn btn-primary">Browse Shows</a>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var ticket in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">@ticket.Show.Title</h5>
+                            <p class="card-text">
+                                <strong>Show Date:</strong> @ticket.Show.DateTime.ToString("MMMM dd, yyyy 'at' h:mm tt")<br>
+                                <strong>Venue:</strong> @ticket.Show.Venue<br>
+                                <strong>Seat:</strong> @ticket.SeatNumber<br>
+                                <strong>Purchase Date:</strong> @ticket.PurchaseDate.ToString("MMMM dd, yyyy")<br>
+                                <strong>Price Paid:</strong> $@ticket.PricePaid
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            @if (ticket.Show.DateTime > DateTime.Now)
+                            {
+                                <span class="badge bg-success">Upcoming</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Past Event</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        
+        <div class="mt-4">
+            <h3>Summary</h3>
+            <p><strong>Total Tickets:</strong> @Model.Count()</p>
+            <p><strong>Total Spent:</strong> $@Model.Sum(t => t.PricePaid)</p>
+        </div>
+    }
+</div>

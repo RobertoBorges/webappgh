@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to Ticket System</h1>
+    <p class="lead">Your one-stop destination for purchasing tickets to amazing shows and events!</p>
+    
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">🎭 Browse Shows</h5>
+                    <p class="card-text">Discover upcoming shows, concerts, and events in your area.</p>
+                    <a asp-controller="Shows" asp-action="Index" class="btn btn-primary">View Shows</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">🎫 Easy Booking</h5>
+                    <p class="card-text">Simple and secure ticket purchasing process with instant confirmation.</p>
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-outline-primary">Get Started</a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Shows" asp-action="MyTickets" class="btn btn-outline-primary">My Tickets</a>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">🏛️ Quality Venues</h5>
+                    <p class="card-text">Experience events at the best venues in town with excellent facilities.</p>
+                    <a asp-controller="Shows" asp-action="Index" class="btn btn-outline-primary">Explore</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-5">
+        <h3>Featured Shows</h3>
+        <p>Don't miss out on these amazing upcoming events!</p>
+        <a asp-controller="Shows" asp-action="Index" class="btn btn-success btn-lg">
+            Browse All Shows <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+</div>

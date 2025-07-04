@@ -1,0 +1,95 @@
+@model TicketSystem.Models.Show
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <h1>@Model.Title</h1>
+            <p class="lead">@Model.Description</p>
+            
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Event Details</h5>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <p><strong>Date & Time:</strong><br>@Model.DateTime.ToString("MMMM dd, yyyy 'at' h:mm tt")</p>
+                            <p><strong>Venue:</strong><br>@Model.Venue</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p><strong>Price per ticket:</strong><br>$@Model.Price</p>
+                            <p><strong>Available tickets:</strong><br>@Model.AvailableTickets out of @Model.TotalTickets</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Purchase Tickets</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.AvailableTickets > 0)
+                    {
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <form asp-action="PurchaseTicket" method="post">
+                                <input type="hidden" name="showId" value="@Model.Id" />
+                                <div class="mb-3">
+                                    <label for="quantity" class="form-label">Number of tickets:</label>
+                                    <select name="quantity" id="quantity" class="form-select">
+                                        @for (int i = 1; i <= Math.Min(Model.AvailableTickets, 10); i++)
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-success btn-lg w-100">
+                                    <i class="fas fa-ticket-alt"></i> Purchase Tickets
+                                </button>
+                                <p class="text-muted mt-2 small">
+                                    Total: $<span id="total">@Model.Price</span>
+                                </p>
+                            </form>
+                        }
+                        else
+                        {
+                            <p class="text-center">
+                                <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-primary">
+                                    Login to Purchase Tickets
+                                </a>
+                            </p>
+                            <p class="text-center mt-2">
+                                <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-outline-secondary">
+                                    Create Account
+                                </a>
+                            </p>
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning text-center">
+                            <strong>Sold Out!</strong><br>
+                            No tickets available for this show.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('quantity').addEventListener('change', function() {
+            var quantity = this.value;
+            var price = @Model.Price;
+            var total = (quantity * price).toFixed(2);
+            document.getElementById('total').textContent = total;
+        });
+    </script>
+}
